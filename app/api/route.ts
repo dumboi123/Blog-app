@@ -1,22 +1,21 @@
-
 import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
 
 // Đường dẫn tới file localStorageData.ts
 const filePath = path.join(process.cwd(), process.env.FILE_PATH || "");
+// Đọc nội dung file hiện tại
+const getCurrentData = () => {
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const currentData = JSON.parse(fileContent);
+  return currentData;
+};
 
 export async function POST(req: Request) {
   try {
     const newData = await req.json(); // Lấy dữ liệu từ body của request
 
-    // Kiểm tra nếu file tồn tại, nếu không thì tạo file mới với mảng rỗng
-    if (!fs.existsSync(filePath)) {
-      fs.writeFileSync(filePath, JSON.stringify([], null, 2), "utf-8");
-    }
-    // Đọc nội dung file hiện tại
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    const currentData = JSON.parse(fileContent);
+    const currentData = getCurrentData();
 
     // Thêm dữ liệu mới
     currentData.push(newData);
@@ -34,12 +33,10 @@ export async function POST(req: Request) {
   }
 }
 
-
 export async function GET() {
   try {
-    // Đọc nội dung file hiện tại
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    const currentData = JSON.parse(fileContent);
+    const currentData = getCurrentData();
+    // Trả về dữ liệu hiện tại
     return NextResponse.json(currentData, { status: 200 });
   } catch (error) {
     console.error("Error reading file:", error);

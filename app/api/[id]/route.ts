@@ -4,17 +4,21 @@ import { NextResponse } from "next/server";
 
 // Đường dẫn tới file localStorageData.json
 const filePath = path.join(process.cwd(), process.env.FILE_PATH || "");
+//Lấy dữ lieu từ file
+const getCurrentData = () => {
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const currentData = JSON.parse(fileContent);
+  return currentData;
+};
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  // console.log("params", params);
   try {
     const { id } = params; // Lấy id từ dynamic route
-    // Đọc nội dung file hiện tại
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    const currentData = JSON.parse(fileContent);
+
+    const currentData = getCurrentData();
 
     // Tìm bài viết theo id
     const post = currentData.find((p: { id: string }) => p.id === id);
@@ -44,9 +48,7 @@ export async function PUT(
     const { id } = params; // Lấy id từ dynamic route
     const body = await request.json(); // Lấy dữ liệu từ request body
 
-    // Đọc nội dung file hiện tại
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    const currentData = JSON.parse(fileContent);
+    const currentData = getCurrentData();
 
     // Tìm bài viết theo id và cập nhật nó
     const postIndex = currentData.findIndex((p: { id: string }) => p.id === id);
@@ -85,8 +87,7 @@ export async function DELETE(
     const { id } = params; // Lấy id từ dynamic route
 
     // Đọc nội dung file hiện tại
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    const currentData = JSON.parse(fileContent);
+    const currentData = getCurrentData();
 
     // Tìm bài viết theo id và xóa nó
     const updatedData = currentData.filter((p: { id: string }) => p.id !== id);

@@ -4,28 +4,25 @@ import { useRouter } from "next/navigation";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Image from "next/image";
 
-import {
-  isValidImageUrl,
-  handleImageChange,
-} from "@/app/lib/validator";
+import { isValidImageUrl, handleImageChange } from "@/app/lib/validator";
 const CreateBlog = () => {
   const authorRef = useRef(null);
   const titleRef = useRef(null);
   const descriptionRef = useRef(null);
 
-  const [choice, setChoice] = useState("");
+  // const [choice, setChoice] = useState("");
   const [imageUrl, setImageUrl] = useState();
   const [isValidImage, setIsValidImage] = useState(false);
 
   const router = useRouter();
 
-// Kiểm tra ảnh khi imageUrl thay đổi
+  // Kiểm tra ảnh khi imageUrl thay đổi
   useEffect(() => {
     const validateImage = async () => {
-      if (imageUrl instanceof Blob) {
-        setIsValidImage(true);
-        return;
-      }
+      // if (imageUrl instanceof Blob) {
+      //   setIsValidImage(true);
+      //   return;
+      // }
       if (imageUrl) {
         const isValid = await isValidImageUrl(imageUrl);
         setIsValidImage(isValid);
@@ -37,12 +34,12 @@ const CreateBlog = () => {
     validateImage();
   }, [imageUrl]);
 
-// Tao id duy nhất cho bài viết
+  // Tao id duy nhất cho bài viết
   const generateUniqueId = () => {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
   };
 
-// Thêm bài viết mới
+  // Thêm bài viết mới
   const addData = async () => {
     const currentDate = new Date().toLocaleDateString();
     if (
@@ -54,6 +51,7 @@ const CreateBlog = () => {
       alert("Please fill in all fields and provide a valid image.");
       return;
     }
+
     const newId = generateUniqueId();
 
     const newData = {
@@ -102,13 +100,53 @@ const CreateBlog = () => {
         />
         <textarea
           className="form-control mb-2"
-          style = {{height: "300px"}}
+          style={{ height: "300px" }}
           placeholder="Description"
           ref={descriptionRef}
         />
         <div className="mb-2"></div>
-        <label className="form-label">Image Source</label>
-        <select
+        <input
+          type="text"
+          className="form-control mb-2"
+          placeholder="Image URL"
+          onChange={(e) => setImageUrl(e.target.value)}
+        />
+        <div
+          className="flex justify-center"
+          style={{ marginTop: "1rem", marginBottom: "1rem" }}
+        >
+          {imageUrl ? (
+            <Image src={imageUrl} alt="image" width={400} height={400}></Image>
+          ) : (
+            <p>
+              No image or valid image URL provided. Please upload an image or
+              provide a valid image URL.
+            </p>
+          )}
+        </div>
+      </div>
+      <button onClick={addData} className={`btn btn-primary mb-2 form-control`}>
+        Add Data
+      </button>
+    </div>
+  );
+};
+
+export default CreateBlog;
+
+// *Chọn nhiều ảnh
+// const handleImageChange = (e) => {
+//   const files = Array.from(e.target.files); // Chuyển FileList thành mảng
+//   const objectUrls = files.map((file) => URL.createObjectURL(file)); // Tạo URL cho từng file
+//   setImageUrl(objectUrls); // Lưu danh sách URL vào state
+// };
+// * Nếu dùng  cách này thì cập nhật state
+// const [imageUrl, setImageUrl] = useState([]); // Lưu danh sách URL của ảnh
+
+// * Chọn lựa file
+{
+  // <label className="form-label">Image Source</label>
+  /* <select
           className="form-select mb-2"
           onChange={(e) => setChoice(e.target.value)}
         >
@@ -130,61 +168,28 @@ const CreateBlog = () => {
             className="form-control mb-2"
             onChange={(e) => setImageUrl(handleImageChange(e))}
           />
-        )}
-        <div
-          className="flex justify-center"
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
-        >
-          {imageUrl ? (
-            choice === "link" && isValidImage ? (
-              <Image
-                src={imageUrl}
-                alt="image"
-                width={400}
-                height={400}
-              ></Image>
-            ) : (
-              <Image
-                src={imageUrl}
-                alt="image"
-                width={400}
-                height={400}
-              ></Image>
-            )
-          ) : (
-            <p>
-              No image or valid image URL provided. Please upload an image or
-              provide a valid image URL.
-            </p>
-          )}
-        </div>
-      </div>
-      <button onClick={addData} className={`btn btn-primary mb-2 form-control`}>
-        Add Data
-      </button>
-    </div>
-  );
-};
-
-export default CreateBlog;
-
-// * Lưu ảnh dưới dạng bite64
-// const handleImageChange = (e) => {
-//   const file = e.target.files[0];
-//   console.log(file);
-//   // file && setImageUrl(file); // Lưu file vào state
-//   const reader = new FileReader();
-//   reader.onloadend = () => {
-//     setImageUrl(reader.result);
-//   };
-//   reader.readAsDataURL(file);
-// };
-
-// *Chọn nhiều ảnh
-// const handleImageChange = (e) => {
-//   const files = Array.from(e.target.files); // Chuyển FileList thành mảng
-//   const objectUrls = files.map((file) => URL.createObjectURL(file)); // Tạo URL cho từng file
-//   setImageUrl(objectUrls); // Lưu danh sách URL vào state
-// };
-// * Nếu dùng  cách này thì cập nhật state
-// const [imageUrl, setImageUrl] = useState([]); // Lưu danh sách URL của ảnh
+        )} */
+}
+//* Hiện ảnh nếu chọn lựa file
+// {imageUrl ? (
+//             choice === "link" && isValidImage ? (
+//               <Image
+//                 src={imageUrl}
+//                 alt="image"
+//                 width={400}
+//                 height={400}
+//               ></Image>
+//             ) : (
+//               <Image
+//                 src={imageUrl}
+//                 alt="image"
+//                 width={400}
+//                 height={400}
+//               ></Image>
+//             )
+//           ) : (
+//             <p>
+//               No image or valid image URL provided. Please upload an image or
+//               provide a valid image URL.
+//             </p>
+//           )}

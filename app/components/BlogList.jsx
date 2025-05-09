@@ -44,22 +44,22 @@ function BlogList() {
   }, []);
 
   let filteredData = data;
-  if (searchQuery.trim() !== "") {
-    filteredData = data.filter((item) =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }
+  // if (searchQuery.trim() !== "") {
+  //   filteredData = data.filter((item) =>
+  //     item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  //   );
+  // }
 
   return (
     <div>
       <div className="container bg-light" style={{ marginTop: "5rem" }}>
-        <input
+        {/* <input
           type="text"
           className="form-control mb-2"
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-        />
+        /> */}
         <div className="row">
           {filteredData.map((item) => (
             <div key={item.id} className="col-md-4">
@@ -89,15 +89,18 @@ function BlogList() {
                     </div>
                   </div>
                   <Link href={`/${item.id}`}>
-                    <button className="btn btn-primary" style={{ marginTop: "1rem" }}>
+                    <button
+                      className="btn btn-primary"
+                      style={{ marginTop: "1rem" }}
+                    >
                       Read more
                     </button>
                   </Link>
-                  <Link href={{ pathname: "/update-blog", query: { id: `${item.id}` } }}>
+                  {/* <Link href={{ pathname: "/update-blog", query: { id: `${item.id}` } }}>
                     <button className="btn btn-warning ms-2" style={{ marginTop: "1rem" }}>
                       Update
                     </button>
-                  </Link>
+                  </Link> */}
                   <button
                     className="btn btn-danger ms-2"
                     style={{ marginTop: "1rem" }}
